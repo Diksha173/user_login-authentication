@@ -75,7 +75,7 @@ def forget_password(request):
         un = request.POST.get('un')
         em=request.POST.get('email')
         UO = User.objects.get(username=un)
-        if UO:
+        if UO and UO.username==un and UO.email==em:
             global rn
             random_number = random.randint(1000, 9999)
             rn=random_number
@@ -89,13 +89,13 @@ def forget_password(request):
             )
             return render(request, 'otp_verification.html') 
         else:
-            return HttpResponse('Email address not registered')
+            return HttpResponse('Username and Email are not matching')
     else:
         return render(request, 'forget_password.html')
     # else:
     #     return HttpResponse('Invalid request method') 
 
-    
+
 
 def otp_verification(request):
     if request.method == 'POST':
