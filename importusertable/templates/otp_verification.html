@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}
+OTP_verification
+{% endblock title %}
+{% block body %}
+
+<center>
+    <form action="{% url 'otp_verification' %}" method="post" id="otpForm">
+        {% csrf_token %}
+        <label for="otp">Enter OTP </label>
+        <input type="text" name="otp" id="otp"><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+    
+    <div id="timer"></div>
+</center>
+
+<script>
+    // Function to redirect to login page after 3 minutes
+    function redirectToLogin() {
+        window.location.href = "user_login";
+    }
+
+    // Update the timer display every second
+    function updateTimerDisplay(timeLeft) {
+        var minutes = Math.floor(timeLeft / 60);
+        var seconds = timeLeft % 60;
+        document.getElementById("timer").innerText = "Time Left: " + minutes + "m " + seconds + "s";
+    }
+
+    // Set the timer for 3 minutes
+    var timeLeft = 1 * 60; // 3 minutes in seconds
+    updateTimerDisplay(timeLeft); // Update timer display initially
+
+    var timer = setInterval(function() {
+        timeLeft--;
+        updateTimerDisplay(timeLeft);
+
+        if (timeLeft <= 0) {
+            clearInterval(timer); // Stop the timer
+            redirectToLogin(); // Redirect to login page
+        }
+    }, 1000); // Update every second
+
+    // Function to reset the timer when OTP is submitted
+    document.getElementById("otpForm").addEventListener("submit", function(event) {
+        clearInterval(timer); // Clear the existing timer
+    });
+</script>
+
+{% endblock body %}
